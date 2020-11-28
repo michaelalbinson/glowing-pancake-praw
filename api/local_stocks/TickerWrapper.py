@@ -1,4 +1,5 @@
 from api.local_stocks.Ticker import Ticker
+import json
 
 
 class TickerWrapper:
@@ -41,7 +42,11 @@ class TickerWrapper:
 		if to_resolve is None or to_resolve == '-':
 			return "Not Found"
 
-		num = int(to_resolve)
+		try:
+			num = int(to_resolve)
+		except ValueError:
+			return to_resolve
+
 		magnitude = abs(num)
 		if magnitude > 10**9:
 			return "%.2fB" % (num / 10 ** 9)
@@ -51,6 +56,25 @@ class TickerWrapper:
 			return "%.2fk" % (num / 10 ** 3)
 		else:
 			return str(num)
+
+	def to_json(self):
+		return json.dumps({
+			'ticker': self.ticker,
+			'Name': self.name,
+			'Description': self.description,
+			'Industry': self.industry,
+			'Sector': self.sector,
+			'Revenue': self.resolve_pretty_number(self.revenue),
+			'Gross Income': self.resolve_pretty_number(self.gross_income),
+			'Employees': self.resolve_pretty_number(self.employees),
+			'Asset Class': self.asset_class,
+			'Forward PE': self.forward_pe,
+			'Trailing PE': self.trailing_pe,
+			'Price-to-Book': self.price_to_book,
+			'Country': self.country,
+			'Analyst Price Target': self.last_target_price,
+			'Last Updated': self.last_updated
+		})
 
 	def pretty_print(self):
 		"""

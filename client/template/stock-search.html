@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Stock Search</title>
+
+    <script src="/js/request.js"></script>
+    <script src="/js/spec/stock-search.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap_v4_0_0.css" />
+    <link rel="stylesheet" href="/css/root.css" />
+</head>
+<body>
+    <a href="/">Home</a>
+    <h1>Stock Search</h1>
+    <hr />
+    <label for="stock-ticker">Pick a Tick(er)</label>
+    <input type="text" placeholder="Stock ticker - PLUG, ENPH etc" name="stock-ticker" id="stock-ticker" />
+    <button type="button" class="btn btn-primary" id="search-btn">Search</button>
+    <button type="button" class="btn btn-secondary hidden" id="refresh-meta-btn">Refresh Ticker Metadata</button>
+
+    <div id="stock-target">
+
+    </div>
+</body>
+</html>
