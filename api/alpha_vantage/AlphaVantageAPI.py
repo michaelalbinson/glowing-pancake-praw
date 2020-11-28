@@ -19,6 +19,7 @@ Be wary that AlphaVantage is the most restrictive API we use and has strict rest
 class AlphaVantageAPI:
     API_CALL_LIMIT = 500
     BASE_URL = 'https://www.alphavantage.co/query?'
+    OVERVIEW_URL = BASE_URL + 'function=OVERVIEW&apikey=__API_KEY__&symbol=__SYMBOL__'
     QUOTE_URL = BASE_URL + 'function=GLOBAL_QUOTE&apikey=__API_KEY__&symbol=__SYMBOL__'
     WEEKLY_URL = BASE_URL + 'function=TIME_SERIES_WEEKLY&apikey=__API_KEY__&symbol=__SYMBOL__'
     DAILY_URL = BASE_URL + 'function=TIME_SERIES_DAILY&symbol=__SYMBOL__&' + \
@@ -140,8 +141,8 @@ class AlphaVantageAPI:
             print('API CALL LIMIT EXCEEDED -- failing out')
             return 'Error'
 
+        print("AV_API: Request OUT to: %s" % (url,))
         final_url = url.replace('__API_KEY__', self.API_KEY)
-        print("AV_API: Request OUT to: %s" % (final_url,))
         result = req.get(final_url)
         time.sleep(5)
         if result.status_code == req.codes.ok:
@@ -158,3 +159,31 @@ class AlphaVantageAPI:
             return 0
         else:
             return count
+
+    def get_overview(self, ticker):
+        """
+
+        :param ticker: String representing the ticker to look up
+        :return: the response JSON from the API
+        """
+        self._last_req_type = 'OVERVIEW'
+        api_url = AlphaVantageAPI\
+            .OVERVIEW_URL\
+            .replace('__SYMBOL__', ticker)
+
+        result = self.try_cache(ticker, force_reload=False)
+        if result is not None:
+            return result
+
+        try:
+            result = json.loads(self.make_request(api_url))
+        except JSONDecodeError:
+            return AlphaVantageAPI.NOT_FOUND_RESPONSE
+
+        if len(result) is 0:
+            return None
+
+        # save what we get to the cache if it's valid
+        result.update({'resource_url': api_url})
+        self._cache.store_result(ticker, self._last_req_type, json.dumps(result))
+        return result

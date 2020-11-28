@@ -69,8 +69,12 @@ def generate_report():
 
         if tickers_found[tf]['count'] > 2:
             print('crawling AV for %s' % tf)
-            pct_change = AlphaVantageAPI().get_parsed_quote(tf)['10. change percent']
+            pct_change = AlphaVantageAPI().get_parsed_quote(tf).get('10. change percent')
+            if pct_change is None:
+                pct_change = "0%"
+
             horizontal_y.append(pct_change.replace('%', ''))
+
             horizontal_x.append(tf)
             mentions_to_movement.append({
                 'data': [{'x': tickers_found[tf]['count'], 'y': pct_change.replace('%', '')}],

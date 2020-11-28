@@ -1,4 +1,11 @@
-"""MarketWatch scraper v3 -- classified!"""
+"""
+MarketWatch scraper v3 -- classified!
+
+NOTE: this is deprecated in favor of using AlphaVantage's Overview feature instead!
+https://www.alphavantage.co/documentation/#company-overview
+
+@see api.alpha_vantage.AlphaVantageAPi.get_overview
+"""
 from tool.scrapers.util.HTMLParser import HTMLParser
 import os
 from db.SqlExecutor import SqlExecutor
